@@ -1,1 +1,6 @@
 version 2 of onspot data management system with agent feature
+
+git clone repo
+cd onspot_v2
+python manage.py syncdb
+python manage.py runserver
