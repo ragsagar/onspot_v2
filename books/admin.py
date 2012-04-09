@@ -8,8 +8,7 @@ from books.models import Agent, PolicyIssue, Branch
 
 
 class PolicyIssueAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in PolicyIssue._meta.fields if \
-            field.editable]
+    list_display = [field.name for field in PolicyIssue._meta.fields]
 
     def save_model(self, request, obj, form, change):
         obj.added_by = request.user
