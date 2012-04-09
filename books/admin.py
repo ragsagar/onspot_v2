@@ -8,17 +8,19 @@ from books.models import Agent, PolicyIssue, Branch
 
 
 class PolicyIssueAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in PolicyIssue._meta.fields]
+    list_display = [field.name for field in PolicyIssue._meta.fields if \
+            field.editable]
 
     def save_model(self, request, obj, form, change):
         obj.added_by = request.user
         obj.agent_percentage = obj.agent.percentage
-        obj.agent_commission = (obj.premium_amount * obj.agent_percentage)-\
-        obj.customer_discount
+        obj.agent_commission = (obj.premium_amount * \
+                (obj.agent_percentage / 100)) - obj.customer_discount
         obj.save()
         
 class AgentAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Agent._meta.fields]
+
     
 class BranchAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Branch._meta.fields]
