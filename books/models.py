@@ -28,7 +28,7 @@ class PolicyIssue(models.Model):
     agent = models.ForeignKey(Agent)
     branch = models.ForeignKey(Branch)
     # columns copied from excel statement
-    policy_no = models.CharField(max_length=30) 
+    policy_no = models.CharField(max_length=30, blank=True) 
     transaction_id = models.CharField(max_length=50, editable=False, blank=True)
     endorsement = models.CharField(max_length=20, editable=False, blank=True)
     policy_date = models.DateTimeField(default=datetime.now,
@@ -37,7 +37,7 @@ class PolicyIssue(models.Model):
     product_code = models.CharField(max_length=10, editable=False, blank=True)
     product_name = models.CharField(max_length=100, editable=False, blank=True)
     group_name = models.CharField(max_length=50, editable=False, blank=True)
-    customer_name = models.CharField(max_length=50, blank=True)
+    customer_name = models.CharField(max_length=50)
     mobile_no = models.IntegerField(max_length=11, blank=True)
     premium_amount = models.DecimalField(max_digits=12, decimal_places=4,
             blank=True, null=True)
@@ -74,7 +74,7 @@ class PolicyIssue(models.Model):
     process_date = models.CharField(max_length=20, editable=False, blank=True)
     # fields required that are not with reliance statement
     customer_discount = models.DecimalField(default=0, max_digits=10,
-            decimal_places=4)
+            decimal_places=4, blank=True, null=True)
     # following fields will be automatically populated when object is saved
     agent_percentage = models.DecimalField(max_digits=5, decimal_places=2,
             editable=False, blank=True, null=True)
