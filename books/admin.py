@@ -13,8 +13,10 @@ class PolicyIssueAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.added_by = request.user
         obj.agent_percentage = obj.agent.percentage
-        obj.agent_commission = (obj.premium_amount * \
-                (obj.agent_percentage / 100)) - obj.customer_discount
+        # agent commission will be calculated only if policy_no is not empty
+        if obj.policy_no:
+            obj.agent_commission = (obj.premium_amount * \
+                    (obj.agent_percentage / 100)) - obj.customer_discount
         obj.save()
         
 class AgentAdmin(admin.ModelAdmin):
