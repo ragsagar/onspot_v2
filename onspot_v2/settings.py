@@ -10,6 +10,9 @@ ADMINS = (
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
+# added for extending the user module, appname.model
+AUTH_PROFILE_MODULE = "books.UserProfile"
+
 MANAGERS = ADMINS
 
 DATABASES = {

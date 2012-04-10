@@ -1,12 +1,20 @@
 from django.contrib import admin
-from books.models import Agent, PolicyIssue, Branch
+from books.models import Agent, PolicyIssue, Branch, UserProfile
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+
+#To extend the builtin user model
+admin.site.unregister(User)
+
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+class UserProfileAdmin(UserAdmin):
+    inlines = [UserProfileInline]
 
 
 
 # Model Admin Classes
 # To include the following models in admin interface
-
-
 class PolicyIssueAdmin(admin.ModelAdmin):
     list_display = [field.name for field in PolicyIssue._meta.fields]
 
@@ -26,7 +34,7 @@ class AgentAdmin(admin.ModelAdmin):
 class BranchAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Branch._meta.fields]
 
-
+admin.site.register(User, UserProfileAdmin)
 admin.site.register(PolicyIssue, PolicyIssueAdmin)
 admin.site.register(Agent, AgentAdmin)
 admin.site.register(Branch, BranchAdmin)

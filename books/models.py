@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 from django.contrib.auth.models import User
 
 
@@ -23,39 +23,38 @@ class PolicyIssue(models.Model):
     BUSINESS_TYPE_CHOICES = (("New", "New"), ("Rollover", "Rollover"),
     ("Renewal", "Renewal"))
     # following two fields will be helpful in future
-    timestamp = models.DateTimeField(default=datetime.now, editable=False)
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
     added_by = models.ForeignKey(User, editable=False)
     agent = models.ForeignKey(Agent)
-    branch = models.ForeignKey(Branch)
+    branch = models.ForeignKey(Branch) #will change
     # columns copied from excel statement
     policy_no = models.CharField(max_length=30, blank=True) 
     transaction_id = models.CharField(max_length=50, editable=False, blank=True)
     endorsement = models.CharField(max_length=20, editable=False, blank=True)
-    policy_date = models.DateTimeField(default=datetime.now,
-    blank=True)
+    policy_date = models.DateTimeField(default=timezone.now, editable=False,
+            blank=True)
     branch_code = models.CharField(max_length=10, editable=False, blank=True)
     product_code = models.CharField(max_length=10, editable=False, blank=True)
     product_name = models.CharField(max_length=100, editable=False, blank=True)
     group_name = models.CharField(max_length=50, editable=False, blank=True)
     customer_name = models.CharField(max_length=50)
-    mobile_no = models.IntegerField(max_length=11, blank=True)
-    premium_amount = models.DecimalField(max_digits=12, decimal_places=4,
-            blank=True, null=True)
-    agent_code = models.CharField(max_length=12, blank=True)
+    mobile_no = models.IntegerField(max_length=11)
+    premium_amount = models.DecimalField(max_digits=12, decimal_places=4)
+    agent_code = models.CharField(max_length=12, editable=False, blank=True)
     bas_code = models.CharField(verbose_name="BAS Code", max_length=12,
-            blank=True)
+            editable=False, blank=True)
     business_type = models.CharField(choices=BUSINESS_TYPE_CHOICES,
-            max_length=10, blank=True)
+            max_length=10, editable=False, blank=True)
     discount = models.DecimalField(max_digits=9, decimal_places=4,
             editable=False, blank=True, null=True)
     irda_percentage = models.DecimalField(verbose_name="IRDA (%)",max_digits=12,
-            decimal_places=4, blank=True, null=True)
+            decimal_places=4, editable=False, blank=True, null=True)
     bas_percentage = models.DecimalField(verbose_name="BAS (%)", max_digits=12,
-            decimal_places=4, blank=True, null=True)
+            decimal_places=4, editable=False, blank=True, null=True)
     agency_commission = models.DecimalField(max_digits=10, decimal_places=4,
-            blank=True, null=True)
+            editable=False, blank=True, null=True)
     bas_commission = models.DecimalField(verbose_name="BAS Commission",
-            max_digits=10, decimal_places=4, blank=True, null=True)
+            max_digits=10, decimal_places=4, editable=False, blank=True, null=True)
     process_type = models.CharField(max_length=20, editable=False, blank=True)
     add_irda_percent = models.DecimalField(max_digits=12, decimal_places=4,
             editable=False, blank=True, null=True)
@@ -68,11 +67,14 @@ class PolicyIssue(models.Model):
     add_remark = models.CharField(max_length=100, editable=False, blank=True)
     add_pay_date = models.CharField(max_length=20, editable=False, blank=True)
     ops_ref_num = models.CharField(max_length=30, editable=False, blank=True)
-    make = models.CharField(max_length=40, editable=False, blank=True)
-    model = models.CharField(max_length=50, editable=False, blank=True)
+    vehicle_make = models.CharField(max_length=40)
+    vehicle_model = models.CharField(max_length=50)
+    vehicle_no = models.CharField(max_length=30, blank=True)
     rsd = models.CharField(max_length=20, editable=False, blank=True)
     process_date = models.CharField(max_length=20, editable=False, blank=True)
     # fields required that are not with reliance statement
+    od_premium = models.DecimalField(verbose_name="OD Premium", max_digits=12,
+            decimal_places=4, default=0)
     customer_discount = models.DecimalField(default=0, max_digits=10,
             decimal_places=4, blank=True, null=True)
     # following fields will be automatically populated when object is saved
@@ -80,12 +82,20 @@ class PolicyIssue(models.Model):
             editable=False, blank=True, null=True)
     agent_commission = models.DecimalField(max_digits=15, decimal_places=4,
             editable=False, blank=True, null=True)
+    # Not sure if the following field is required 
+    od_discount = models.DecimalField(max_digits=10, decimal_places=4,
+            blank=True)
+    cover_note_no = models.CharField(max_length=30, blank=True)
 
 
     def __unicode__(self):
         return self.policy_no
 
-
+class UserProfile(models.Model):
+    "Extending the builtin user model"
+    branch = models.ForeignKey(Branch)
+    employee = models.BooleanField(default=False)
+    user = models.ForeignKey(User, unique=True)
 
 
 
