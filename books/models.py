@@ -26,7 +26,7 @@ class PolicyIssue(models.Model):
     timestamp = models.DateTimeField(default=timezone.now, editable=False)
     added_by = models.ForeignKey(User, editable=False)
     agent = models.ForeignKey(Agent)
-    branch = models.ForeignKey(Branch) #will change
+    branch = models.ForeignKey(Branch) 
     # columns copied from excel statement
     policy_no = models.CharField(max_length=30, blank=True) 
     transaction_id = models.CharField(max_length=50, editable=False, blank=True)
@@ -94,7 +94,8 @@ class PolicyIssue(models.Model):
 class UserProfile(models.Model):
     "Extending the builtin user model"
     branch = models.ForeignKey(Branch)
-    employee = models.BooleanField(default=False)
+    is_employee = models.BooleanField(verbose_name="Employee status",
+            default=True, help_text="Dont select this if you are an admin")
     user = models.ForeignKey(User, unique=True)
 
 
