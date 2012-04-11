@@ -11,6 +11,7 @@ class UserProfileInline(admin.StackedInline):
 class UserProfileAdmin(UserAdmin):
     inlines = [UserProfileInline]
 
+admin.site.register(User, UserProfileAdmin)
 
 
 # Model Admin Classes
@@ -54,7 +55,6 @@ class AgentAdmin(admin.ModelAdmin):
 class BranchAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Branch._meta.fields]
 
-admin.site.register(User, UserProfileAdmin)
 admin.site.register(PolicyIssue, PolicyIssueAdmin)
 admin.site.register(Agent, AgentAdmin)
 admin.site.register(Branch, BranchAdmin)

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from django.db.models.signals import post_save
 
 
 class Branch(models.Model):
@@ -84,7 +84,7 @@ class PolicyIssue(models.Model):
             editable=False, blank=True, null=True)
     # Not sure if the following field is required 
     od_discount = models.DecimalField(max_digits=10, decimal_places=4,
-            blank=True)
+            blank=True, null=True)
     cover_note_no = models.CharField(max_length=30, blank=True)
 
 
@@ -93,12 +93,16 @@ class PolicyIssue(models.Model):
 
 class UserProfile(models.Model):
     "Extending the builtin user model"
-    branch = models.ForeignKey(Branch)
+    branch = models.ForeignKey(Branch,blank=True,null=True)
     is_employee = models.BooleanField(verbose_name="Employee status",
             default=True, help_text="Dont select this if you are an admin")
     user = models.ForeignKey(User, unique=True)
 
-
+#def create_user_profile(sender, instance, created, **kwargs):
+#    if created:
+#        UserProfile.objects.create(user=instance)
+#
+#post_save.connect(create_user_profile, sender=User)
 
     
 
