@@ -2,6 +2,8 @@ from django.contrib import admin
 from books.models import Agent, PolicyIssue, Branch, UserProfile
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+# import liststyle app to add highlighting to rows
+from liststyle.admin import ListStyleAdminMixin
 
 #To extend the builtin user model
 admin.site.unregister(User)
@@ -16,9 +18,19 @@ admin.site.register(User, UserProfileAdmin)
 
 # Model Admin Classes
 # To include the following models in admin interface
-class PolicyIssueAdmin(admin.ModelAdmin):
+class PolicyIssueAdmin(admin.ModelAdmin, ListStyleAdminMixin):
     list_display = [field.name for field in PolicyIssue._meta.fields]
+    list_display_links = ('customer_name',)
+    #list_filter = (PolicyNoListFilter,)
+    search_fields = ['customer_name']
 
+
+    #To highlight rows with blank policy_no fields
+    def get_row_css(self, obj, index):
+        if not obj.policy_no:
+            return 'red'
+        return ''
+    
     def save_model(self, request, obj, form, change):
         obj.added_by = request.user
         if request.user.get_profile().is_employee:
