@@ -1,0 +1,57 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia admin_list i18n %}
+
+{% block title %}Agent Statement | OnSpot {% endblock %}
+{% block branding %}<h1 style="color:white;">Statement of Agent {{ agent_name }} {% if month %}for the month {{ month }} {% endif %}</h1>{% endblock %}	
+
+{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/login.css" />{% endblock %}
+
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+      <a href="{% url admin:index %}">
+        {% trans "Home" %}
+      </a>
+       &rsaquo; 
+       <a href="{% url AgentStatementSelect %}">
+        Find statement of another agent
+      </a>
+      </div>
+  {% endblock %}
+
+
+
+{% block content %}
+
+<div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+<table cellspacing="0" id="result_list">
+<thead>
+<tr>
+	<h2>
+	<th>Id</th><th>TimeStamp</th><th>Added by</th><th>Agent</th><th>Branch</th><th>Policy No</th><th>Transaction Id</th><th>Endorsement</th><th>Policy Date</th>
+	<th>Branch Code</th><th>Product Code</th><th>Product Name</th><th>Group Name</th><th>Customer Name</th><th>Mobile No</th><th>Premium Amount</th><th>Agent Code</th>
+	<th>BAS Code</th><th>Business Type</th><th>Discount</th><th>Irda Percentage</th><th>BAS Percentage</th><th>Agency Commission</th><th>BAS Commission</th><th>Process Type</th>
+	<th>Add Irda Percentage</th><th>Add BAS Percent</th><th>Add Irda Commission</th><th>BAS Commission</th><th>Add Remark</th><th>Add Paydate</th><th>ops_ref_num</th>
+	<th>Vehicle Make</th><th>Vehicle Model</th><th>Vehicle No</th><th>RSD</th><th>Process Date</th><th>OD Premium</th><th>Customer Discount</th><th>Agent Percentage</th>
+	<th>Agent Commission</th><th>OD Discount</th><th>Cover Note No</th>
+	</h2>
+</tr>
+
+{% for item in objects %}
+<tr>
+	<th>{{ item.id }}</th><th>{{ item.timestamp }}</th><th>{{ item.added_by }}</th><th>{{ item.agent }}</th><th>{{ item.branch }}</th><th>{{ item.policy_no }}</th>
+	<th>{{ item.transaction_id }}</th><th>{{ item.endorsement }}</th><th>{{ item.policy_date }}</th><th>{{ item.branch_code }}</th><th>{{ item.product_code }}</th>
+	<th>{{ item.product_name }}</th><th>{{ item.group_name }}</th><th>{{ item.customer_name }}</th><th>{{ item.mobile_no }}</th><th>{{ item.premium_amount }}</th>
+	<th>{{ item.agent_code }}</th><th>{{ item.bas_code }}</th><th>{{ item.business_type }}</th><th>{{ item.discount }}</th><th>{{ item.irda_percentage }}</th>
+	<th>{{ item.bas_percentage }}</th><th>{{ item.agency_commission }}</th><th>{{ item.bas_commission }}</th><th>{{ item.process_type }}</th><th>{{ item.add_irda_percent }}</th>
+	<th>{{ item.add_bas_percent }}</th><th>{{ item.add_irda_commission }}</th><th>{{ item.bas_commission }}</th><th>{{ item.add_remark }}</th><th>{{ item.add_pay_date }}</th>
+	<th>{{ item.ops_ref_num }}</th><th>{{ item.vehicle_make }}</th><th>{{ item.vehicle_model }}</th><th>{{ item.vehicle_no }}</th><th>{{ item.rsd }}</th><th>{{ item.process_date }}</th>
+	<th>{{ item.od_premium }}</th><th>{{ item.customer_discount }}</th><th>{{ item.agent_precentage }}</th><th>{{ item.agent_commission }}</th><th>{{ item.od_discount }}</th>
+	<th>{{ item.cover_note_no }}</th>
+</tr>
+{% endfor %}
+</thead>
+</table>
+<h3> Agent Commission{% if month %} for the month {{ month }}{% endif %} = {{ total_commission }}</h3>
+</div>
+{% endblock %}	
