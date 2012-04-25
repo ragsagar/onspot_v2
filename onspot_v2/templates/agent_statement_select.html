@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/login.css" />{% endblock %}
+
+{% block title %}Per Agent Statement | OnSpot V2 {% endblock %}
+{% block branding %}<h1 style="color:white;">Agent Statement</h1>{% endblock %}	
+
+{% block content %}
+
+		<strong><p>Select the agent and month </p></strong>
+		<form action="{% url AgentStatementSelect %}" method="post">{% csrf_token %}
+		  
+			{{ form.as_p }}
+			
+			<input type="submit" value="Check Statement" />
+		</form>
+		
+{% endblock %}	
