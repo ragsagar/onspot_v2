@@ -5,10 +5,10 @@ import calendar
 
 
 class AgentStatementSelectForm(forms.Form):
-    AGENT_CHOICES = [(obj.id, obj.name) for obj in Agent.objects.all()]
     MONTH_CHOICES = [(0, None)] + [(i, calendar.month_name.__getitem__(i)) \
             for i in range(1,13)]
-    agent = forms.ChoiceField(choices=AGENT_CHOICES, required=True)
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=True,
+            empty_label=None)
     month = forms.ChoiceField(choices=MONTH_CHOICES, required=False)
 
 class UploadExcelFileForm(forms.Form):

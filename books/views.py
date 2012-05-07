@@ -41,14 +41,14 @@ def AgentStatementSelect(request):
     if request.method == 'POST':
         form = AgentStatementSelectForm(request.POST)
         if form.is_valid():
-            agent_id = form.cleaned_data['agent']
+            agent = form.cleaned_data['agent']
             month = form.cleaned_data['month']
             if int(month):
                 return \
-                        HttpResponseRedirect(reverse('AgentStatementSelectURL')+agent_id+'/'+month+'/')
+                        HttpResponseRedirect(reverse('AgentStatementSelectURL') + str(agent.id) +'/'+month+'/')
             else:
                 return \
-                        HttpResponseRedirect(reverse('AgentStatementSelectURL')+agent_id+'/')
+                        HttpResponseRedirect(reverse('AgentStatementSelectURL') + str(agent.id ) +'/')
     else:
         form = AgentStatementSelectForm()
         return render_to_response('agent_statement_select.html', {'form': \
