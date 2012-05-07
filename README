@@ -4,3 +4,5 @@ git clone repo
 cd onspot_v2
 python manage.py syncdb
 python manage.py runserver
+
+Needs xlrd and xlwt modules to make use of 'upload excel data' feature
