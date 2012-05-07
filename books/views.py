@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from decimal import Decimal
@@ -13,6 +14,7 @@ import datetime, calendar, mimetypes
 
 
 @staff_member_required
+@permission_required("books.delete_policyissue")
 def AgentStatement(request, agent_id, month=None):
     """ Fetches agent statement for particular month and displays it as a
     table"""
@@ -33,6 +35,7 @@ def AgentStatement(request, agent_id, month=None):
         'total_commission':total_commission, 'month': month_name })
 
 @staff_member_required
+@permission_required("books.delete_policyissue")
 def AgentStatementSelect(request):
     """ Displays form to select agent and month """
     if request.method == 'POST':
@@ -53,6 +56,7 @@ def AgentStatementSelect(request):
 
 
 @staff_member_required
+@permission_required("books.delete_policyissue")
 def UploadExcelStatement(request):
     """ Display form to upload excel statement and select month """
     error_message = ""
@@ -70,17 +74,17 @@ def HandleExcelStatement(request):
     database"""
     if 'our' in request.POST:
         workbook_object = request.session['our_workbook']
+        fname = "our_statement" + "_" + request.session['fname'] + ".xls"
         response = HttpResponse(mimetype="application/ms-excel")
-        response['Content-Disposition'] = "attatchment; filename=%s" % \
-                "our_statement.xls"
+        response['Content-Disposition'] = "attatchment; filename=%s" % fname
         workbook_object.save(response)
         return response
 
     elif 'others' in request.POST:
         workbook_object = request.session['others_workbook']
+        fname = "others_statement" + "_" + request.session['fname'] + ".xls"
         response = HttpResponse(mimetype="application/ms-excel")
-        response['Content-Disposition'] = "attatchment; filename=%s" % \
-                "others_statement.xls"
+        response['Content-Disposition'] = "attatchment; filename=%s" % fname
         workbook_object.save(response)
         return response
 
@@ -92,6 +96,7 @@ def HandleExcelStatement(request):
     if form.is_valid():
         year = form.cleaned_data['year']
         month = form.cleaned_data['month']
+        month_name = calendar.month_name.__getitem__(int(month)) #for filename
         objects = PolicyIssue.objects.filter(policy_date__month=month,
                 policy_date__year=year)
         policy_numbers = [ obj.policy_no for obj in objects if obj.policy_no ]
@@ -144,6 +149,7 @@ def HandleExcelStatement(request):
 
         request.session['our_workbook'] = our_workbook
         request.session['others_workbook'] = others_workbook
+        request.session['fname'] = '_'.join((month_name, year))
 
         return render_to_response("generate_excel_statement.html", \
                 { 'error_objects' : error_objects }, \
