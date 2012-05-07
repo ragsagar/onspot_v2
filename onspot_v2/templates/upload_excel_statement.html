@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/login.css" />{% endblock %}
+
+{% block title %}Upload Excel Statement | OnSpot V2 {% endblock %}
+{% block branding %}<h1 style="color:white;">Upload Excel Statement</h1>{% endblock %}	
+
+{% block content %}
+
+		<strong><p>Select the excel statement, its year and month </p></strong>
+		<form action="{% url UploadExcelStatementURL %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+		  
+			{{ form.as_p }}
+			
+			<input type="submit" value="Generate Statment" />
+		</form>
+		{% if error_message %} <h4 style="color:red;">{{ error_message }}</h4> {% endif %}
+{% endblock %}	

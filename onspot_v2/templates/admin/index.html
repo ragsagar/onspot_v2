@@ -45,7 +45,8 @@
     <p>{% trans "You don't have permission to edit anything." %}</p>
 {% endif %}
 {% if perms.books.delete_policyissue %}
-<h4><a href={% url AgentStatementSelect %}>Agent Statement</a></h4>
+<h4><a href={% url AgentStatementSelectURL %}>Agent Statement</a></h4>
+<h4><a href={% url UploadExcelStatementURL %}>Upload data in Excel file</a></h4>
 {% endif %}
 </div>
 {% endblock %}

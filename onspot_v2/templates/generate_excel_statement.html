@@ -1,0 +1,34 @@
+{% extends "admin/base_site.html" %}
+{% load adminmedia admin_list i18n %}
+
+{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/login.css" />{% endblock %}
+
+{% block title %}Upload Excel Statement | OnSpot V2 {% endblock %}
+{% block branding %}<h1 style="color:white;">Upload Excel Statement</h1>{% endblock %}	
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+      <a href="{% url admin:index %}">
+        {% trans "Home" %}
+      </a>
+       &rsaquo; 
+       <a href="{% url UploadExcelStatementURL %}">
+        Upload another excel file
+      </a>
+      </div>
+{% endblock %}
+
+{% block content %}
+<form action="{% url UploadExcelStatementURL %}" method="post">{% csrf_token %}
+<input type="submit" name="our" value="Download our statement" />
+<input type="submit" name="others" value="Download others statement" />
+</form>
+{% if error_objects %}
+<strong><p>Following policy numbers doesnot exist in excel file</p></strong>
+{% for obj in error_objects %}
+<p><a href="{% url admin:books_policyissue_change obj.id %}">{{ obj.policy_no }}</a></p>
+{% endfor %}
+{% endif %}
+		
+{% endblock %}	
+

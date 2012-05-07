@@ -7,8 +7,8 @@
 
 {% block content %}
 
-		<strong><p>Select the agent and month </p></strong>
-		<form action="{% url AgentStatementSelect %}" method="post">{% csrf_token %}
+		<strong><p>Upload the Excel statement and select the month </p></strong>
+		<form action="{% url AgentStatementSelectURL %}" method="post">{% csrf_token %}
 		  
 			{{ form.as_p }}
 			

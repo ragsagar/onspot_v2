@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from books.views import AgentStatementSelect, AgentStatement
+from books.views import UploadExcelStatement
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -14,8 +15,11 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^agent_statement/$', AgentStatementSelect, name="AgentStatementSelect"),
+    url(r'^agent_statement/$', AgentStatementSelect,
+        name="AgentStatementSelectURL"),
     url(r'^agent_statement/(?P<agent_id>\d{1,2})/$', AgentStatement),
     url(r'^agent_statement/(?P<agent_id>\d{1,2})/(?P<month>\d{1,2})/$', \
             AgentStatement),
+    url(r'^upload_statement/$', UploadExcelStatement, \
+            name="UploadExcelStatementURL"),
 )
