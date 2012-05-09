@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse
 from decimal import Decimal
 from excel_access import ExcelStatement
@@ -18,7 +18,7 @@ import datetime, calendar, mimetypes
 def AgentStatement(request, agent_id, year=None, month=None):
     """ Fetches agent statement for particular month and displays it as a
     table"""
-    agent_obj = Agent.objects.get(id=agent_id)
+    agent_obj = get_object_or_404(Agent, id=agent_id)
     total_commission = 0
     if month:
         objects = \
@@ -164,15 +164,3 @@ def HandleExcelStatement(request):
     else:
         return render_to_response("upload_excel_statement.html", {"form":form,
             "error_message": error_message}, context_instance=RequestContext(request, {}))
-
-
-
-                
-
-
-        #from django.http import HttpResponse
-        #response = HttpResponse(mimetype=f.content_type)
-        #response['Content-Disposition'] = 'attachment; filename=%s' % \
-                #f.name
-        #response.write(f.read())
-        #return response
