@@ -17,9 +17,12 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^agent_statement/$', AgentStatementSelect,
         name="AgentStatementSelectURL"),
-    url(r'^agent_statement/(?P<agent_id>\d{1,2})/$', AgentStatement),
-    url(r'^agent_statement/(?P<agent_id>\d{1,2})/(?P<month>\d{1,2})/$', \
-            AgentStatement),
+    url(r'^agent_statement/(?P<agent_id>\d{1,2})/$', AgentStatement, \
+            name="AgentStatementURL"),
+    url(r'^agent_statement/(?P<agent_id>\d{1,2})/(?P<year>\d{4})/$', \
+            AgentStatement, name="AgentStatementURL"),
+    url(r'^agent_statement/(?P<agent_id>\d{1,2})/(?P<year>\d{4})/(?P<month>\d{1,2})/$', \
+            AgentStatement, name="AgentStatementURL"),
     url(r'^upload_statement/$', UploadExcelStatement, \
             name="UploadExcelStatementURL"),
 )

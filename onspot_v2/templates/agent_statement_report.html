@@ -52,6 +52,6 @@
 {% endfor %}
 </thead>
 </table>
-<h3> Agent Commission{% if month %} for the month {{ month }}{% endif %} = {{ total_commission }}</h3>
+<h3> Agent Commission {% if year %} for{% if month %} {{ month }} {% else %} the year {% endif %}{{ year }}{% endif %} = {{ total_commission }}</h3>
 </div>
 {% endblock %}	

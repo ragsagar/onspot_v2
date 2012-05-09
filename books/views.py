@@ -15,15 +15,20 @@ import datetime, calendar, mimetypes
 
 @staff_member_required
 @permission_required("books.delete_policyissue")
-def AgentStatement(request, agent_id, month=None):
+def AgentStatement(request, agent_id, year=None, month=None):
     """ Fetches agent statement for particular month and displays it as a
     table"""
     agent_obj = Agent.objects.get(id=agent_id)
     total_commission = 0
     if month:
         objects = \
-                PolicyIssue.objects.filter(policy_date__month=month,agent=agent_obj)
+                PolicyIssue.objects.filter(policy_date__month=month, \
+                policy_date__year=year, agent=agent_obj)
         month_name = calendar.month_name.__getitem__(int(month))
+    elif year:
+        objects = PolicyIssue.objects.filter(policy_date__year=year, \
+                agent=agent_obj)
+        month_name = None
     else:
         objects = PolicyIssue.objects.filter(agent=agent_obj)
         month_name = None
@@ -32,7 +37,7 @@ def AgentStatement(request, agent_id, month=None):
             total_commission = total_commission + item.agent_commission
     return render_to_response("agent_statement_report.html",{ 'agent_name':agent_obj.name,
         'objects':objects, 'agent_id':agent_obj.id,
-        'total_commission':total_commission, 'month': month_name })
+        'total_commission':total_commission, 'month': month_name, 'year': year })
 
 @staff_member_required
 @permission_required("books.delete_policyissue")
@@ -42,13 +47,15 @@ def AgentStatementSelect(request):
         form = AgentStatementSelectForm(request.POST)
         if form.is_valid():
             agent = form.cleaned_data['agent']
-            month = form.cleaned_data['month']
-            if int(month):
-                return \
-                        HttpResponseRedirect(reverse('AgentStatementSelectURL') + str(agent.id) +'/'+month+'/')
+            month = int(form.cleaned_data['month'])
+            year = int(form.cleaned_data['year'])
+            if month:
+                return HttpResponseRedirect(reverse('AgentStatementURL',\
+                        kwargs={"agent_id": int(agent.id), "year": year,
+                            "month": month}))
             else:
-                return \
-                        HttpResponseRedirect(reverse('AgentStatementSelectURL') + str(agent.id ) +'/')
+                return HttpResponseRedirect(reverse('AgentStatementURL',\
+                        kwargs={"agent_id": int(agent.id), "year": year}))
     else:
         form = AgentStatementSelectForm()
         return render_to_response('agent_statement_select.html', {'form': \
