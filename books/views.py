@@ -14,7 +14,7 @@ import datetime, calendar, mimetypes
 
 
 @staff_member_required
-@permission_required("books.delete_policyissue")
+@permission_required("books.delete_policyissue", raise_exception=True)
 def AgentStatement(request, agent_id, year=None, month=None):
     """ Fetches agent statement for particular month and displays it as a
     table"""
@@ -40,7 +40,7 @@ def AgentStatement(request, agent_id, year=None, month=None):
         'total_commission':total_commission, 'month': month_name, 'year': year })
 
 @staff_member_required
-@permission_required("books.delete_policyissue")
+@permission_required("books.delete_policyissue", raise_exception=True)
 def AgentStatementSelect(request):
     """ Displays form to select agent and month """
     if request.method == 'POST':
@@ -63,7 +63,7 @@ def AgentStatementSelect(request):
 
 
 @staff_member_required
-@permission_required("books.delete_policyissue")
+@permission_required("books.delete_policyissue", raise_exception=True)
 def UploadExcelStatement(request):
     """ Display form to upload excel statement and select month """
     error_message = ""
