@@ -20,8 +20,11 @@
   {% endblock %}
 
 
-
 {% block content %}
+<ul class="object-tools">
+	<li><a href="{% url DownloadAgentStatementAsCsvURL %}">Download as CSV</a></li>
+</ul>
+
 
 <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
 <table cellspacing="0" id="result_list">

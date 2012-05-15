@@ -1,7 +1,7 @@
 from books.models import PolicyIssue, Agent
 from books.forms import AgentStatementSelectForm, UploadExcelFileForm
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse
 from decimal import Decimal
 from excel_access import ExcelStatement
+from csv_view import export_as_csv
 from django.core import urlresolvers
 import datetime, calendar, mimetypes
 
@@ -25,16 +26,21 @@ def AgentStatement(request, agent_id, year=None, month=None):
                 PolicyIssue.objects.filter(policy_date__month=month, \
                 policy_date__year=year, agent=agent_obj)
         month_name = calendar.month_name.__getitem__(int(month))
+        file_name = " ".join( (agent_obj.name, month_name, str(year)) )
     elif year:
         objects = PolicyIssue.objects.filter(policy_date__year=year, \
                 agent=agent_obj)
         month_name = None
+        file_name = " ".join( (agent_obj.name, str(year)) )
     else:
         objects = PolicyIssue.objects.filter(agent=agent_obj)
         month_name = None
+        file_name = agent_obj.name
     for item in objects:
         if item.agent_commission:
             total_commission = total_commission + item.agent_commission
+    request.session["queryset"] = objects # for downloading as csv
+    request.session["file_name"] = file_name
     return render_to_response("agent_statement_report.html",{ 'agent_name':agent_obj.name,
         'objects':objects, 'agent_id':agent_obj.id,
         'total_commission':total_commission, 'month': month_name, 'year': year })
@@ -164,3 +170,18 @@ def HandleExcelStatement(request):
     else:
         return render_to_response("upload_excel_statement.html", {"form":form,
             "error_message": error_message}, context_instance=RequestContext(request, {}))
+
+@staff_member_required
+@permission_required("books.delete_policyissue", raise_exception=True)
+def DownloadAgentStatementAsCSV(request):
+    try:
+        queryset = request.session["queryset"]
+        file_name = request.session["file_name"]
+        del request.session["queryset"]
+        del request.session["file_name"]
+    except:
+        raise Http404
+    
+    return export_as_csv(queryset, file_name)
+
+    
